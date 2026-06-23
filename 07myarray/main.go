@@ -10,6 +10,6 @@ func main() {
 	fruitlist[2]="litchi"
 	fruitlist[3]="banana"
 	fmt.Println("fruit list is :",fruitlist)
-	var veglist= [3]string("potato","beans","mushroom")
+	var veglist= [3]string{"potato","beans","mushroom"}
 	fmt.Println("vegy list is:",veglist)
 }
