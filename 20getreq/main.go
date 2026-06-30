@@ -10,7 +10,7 @@ performGetRequest()
 }
 
 func performGetRequest() {
-	const myurl = "http://localhost:8000/get"
+	const myurl = "http://localhost:8003/get"
 	response, err := http.Get(myurl)
 	if err!=nil{
 		panic(err)

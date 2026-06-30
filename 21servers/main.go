@@ -11,9 +11,9 @@ func main() {
 		fmt.Fprintln(w, "Hello from Go")
 	})
 
-	fmt.Println("Server started at port 8000")
+	fmt.Println("Server started at port 8003")
 
-	err := http.ListenAndServe(":8000", nil)
+	err := http.ListenAndServe(":8003", nil)
 	if err != nil {
 		fmt.Println(err)
 	}
