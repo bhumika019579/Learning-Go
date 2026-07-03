@@ -5,12 +5,14 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
 func main() {
 performGetRequest()
 performPostJsonRequest()
+performPostFormRequest()
 }
 
 func performGetRequest() {
@@ -44,6 +46,22 @@ func performPostJsonRequest(){
 	}
 	defer response.Body.Close()
 	content,_:=io.ReadAll(response.Body)
+	fmt.Println(string(content))
+
+}
+func performPostFormRequest(){
+	const myurl="http://localhost:8003/postform"
+	// form data
+	data:=url.Values{}
+	data.Add("firstname","bhumika")
+	data.Add("lastname","chanchlani")
+	data.Add("email","bhumika@gmail.com")
+	response,err:=http.PostForm(myurl,data)
+	if err!=nil{
+		panic(err)
+	}
+	content,_:=io.ReadAll(response.Body)
+	defer response.Body.Close()
 	fmt.Println(string(content))
 
 }
