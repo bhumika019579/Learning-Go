@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -18,4 +20,9 @@ func performGetRequest() {
 	defer response.Body.Close()
 	fmt.Println("status code :", response.StatusCode)
 	fmt.Println("content length is :",response.ContentLength)
+	var responseString strings.Builder
+	content,_:=ioutil.ReadAll(response.Body)
+	bytecount,_:=responseString.Write(content)
+	fmt.Println(bytecount)
+	fmt.Println(responseString.String())
 }
