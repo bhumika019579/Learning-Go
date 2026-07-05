@@ -34,29 +34,29 @@ func EncodeJson() {
 func DecodeJson() {
 	jsonDataFromWeb := []byte(`
 	 {
-                "coursename": "ReactJS Bootcamp",
-                "Price": 299,
+                "coursename": "NextJS Bootcamp",
+                "Price": 399,
                 "website": "lco.in",
                 "tags": [
-                        "web-dev",
+                        "frontend",
                         "js"
                 ]
         }
 		`)
-		var lcoCourse course
-		checkValid:=json.Valid(jsonDataFromWeb)
-		if checkValid{
-			fmt.Println("JSON was valid")
-			json.Unmarshal(jsonDataFromWeb,&lcoCourse)
-			fmt.Printf("%#v\n",lcoCourse)
-		} else{
-			fmt.Println("JSON was not valid")
-		}
-		// some cases where we want to add data to key value 
-		var myOnlineData map[string]interface{}
-		json.Unmarshal(jsonDataFromWeb,&myOnlineData)
-		fmt.Printf("%v\n",myOnlineData)
-		for k,v := range myOnlineData{
-			fmt.Printf("key is %v and value is %v and type is :%T\n",k,v,v)
-		}
+	var lcoCourse course
+	checkValid := json.Valid(jsonDataFromWeb)
+	if checkValid {
+		fmt.Println("JSON was valid")
+		json.Unmarshal(jsonDataFromWeb, &lcoCourse)
+		fmt.Printf("%#v\n", lcoCourse)
+	} else {
+		fmt.Println("JSON was not valid")
+	}
+	// some cases where we want to add data to key value
+	var myOnlineData map[string]interface{}
+	json.Unmarshal(jsonDataFromWeb, &myOnlineData)
+	fmt.Printf("%v\n", myOnlineData)
+	for k, v := range myOnlineData {
+		fmt.Printf("key is %v and value is %v and type is :%T\n", k, v, v)
+	}
 }
