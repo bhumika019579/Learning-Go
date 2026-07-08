@@ -1,5 +1,11 @@
 package main
 
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
 // model for courses-file
 type Course struct{
 	CourseId string `json:"courseid"`
@@ -20,4 +26,14 @@ return c.CourseId=="" && c.CourseName==""
 }
 func main(){
 
+}
+// controllers-file 
+//serve home route
+func serveHome(w http.ResponseWriter,r *http.Request){
+	w.Write([]byte("<h1>welcome to API by learncode online</h1>"))
+}
+func getAllCourses(w http.ResponseWriter,r *http.Request){
+	fmt.Println("Get all courses ")
+	w.Header().Set("content-type","application/json")
+	json.NewEncoder(w).Encode(courses)
 }
