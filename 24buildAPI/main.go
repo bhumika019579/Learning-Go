@@ -1,13 +1,13 @@
 package main
 
 import (
-
 	"encoding/json"
 	"fmt"
+	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
-   "math/rand"
 
 	"github.com/gorilla/mux"
 )
@@ -32,7 +32,25 @@ func(c*Course) IsEmpty() bool{
 return c.CourseName==""
 }
 func main(){
+	fmt.Println("API-learncodeonline.in")
+	r:=mux.NewRouter()
+	// seeding
+	courses =append(courses, Course{CourseId: "2",CourseName: "ReactJS",
+	CoursePrice: 299,Author:&Author{Fullname: "bhumika",Website: "lco.in"},
+})
+	courses =append(courses, Course{CourseId: "4",CourseName: "NextJS",
+	CoursePrice: 399,Author:&Author{Fullname: "default",Website: "go.in"},
+})
+//routing
+    r.HandleFunc("/",serveHome).Methods("GET")
+	r.HandleFunc("/courses",getAllCourses).Methods("GET")
+	r.HandleFunc("/course/{id}",getOneCourse).Methods("GET")
+	r.HandleFunc("/course",createOneCourse).Methods("POST")
+	r.HandleFunc("/course/{id}",updateOneCourse).Methods("PUT")
+	r.HandleFunc("/course/{id}",deleteOneCourse).Methods("DELETE")
 
+// listen to a port 
+    log.Fatal(http.ListenAndServe(":5001",r))
 }
 // controllers-file 
 //serve home route
@@ -66,6 +84,7 @@ func createOneCourse(w http.ResponseWriter, r *http.Request){
 	// what if : body is empty
 	if r.Body==nil{
 		json.NewEncoder(w).Encode("please send some data")
+		return
 
 	}
 	// what about-{}
