@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"net/http"
+	"os"
 
+	"github.com/bhumika019579/go-fibre-postgres/models"
+	"github.com/bhumika019579/go-fibre-postgres/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
@@ -49,6 +52,28 @@ func(r*Repository)GetBooks(context*fiber.Ctx)error{
 })
 return nil
 }
+func(r*Repository)DeleteBook(context*fiber.Ctx)error{
+	bookModel:=models.Books{}
+	id:=context.Params("id")
+	if id==""{
+		context.Status(http.StatusInternalServerError).JSON(&fiber.Map{
+			"message":"id cannot be empty",
+		})
+		return nil
+	}
+	err:=r.DB.Delete(bookModel,id)
+	if err.Error!=nil{
+		context.Status(http.StatusBadRequest).JSON(&fiber.Map{
+			"message":"could not delete a book",
+		})
+		return err.Error
+	}
+	context.Status(http.StatusOK).JSON(&fiber.Map{
+		"message":"book deleted successfully",
+	})
+	return nil
+}
+
 // a struct method not a regular function
 func(r*Repository)SetupRoutes(app *fiber.App){
 	api:=app.Group("/api")
@@ -63,6 +88,15 @@ func main(){
 	err:=godotenv.Load(".env")
 	if err!=nil{
 		panic(err)
+	}
+	config:=&storage.Config{
+		Host: os.Getenv("DB_HOST"),
+		Port: os.Getenv("DB_PORT"),
+		User:  os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		SSLMode: os.Getenv("DB_SSLMODE"),
+		DBName:  os.Getenv("DB_NAME"),
+
 	}
 	db,err:=storage.NewConnection(config)
 	if err!=nil{
