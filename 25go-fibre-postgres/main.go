@@ -1,7 +1,9 @@
 package main
 
 import (
-	"context"
+
+	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -73,12 +75,35 @@ func(r*Repository)DeleteBook(context*fiber.Ctx)error{
 	})
 	return nil
 }
+func(r*Repository)GetBookByID(context*fiber.Ctx)error{
+	id:=context.Params("id")
+	bookModel:=&models.Books{}
+	if id==""{
+		context.Status(http.StatusInternalServerError).JSON(&fiber.Map{
+			"message":"id cannot be empty",
+		})
+		return nil
+	}
+	fmt.Println("the ID is ",id)
+	err:=r.DB.Where("id = ?",id).First(bookModel).Error
+	if err!=nil{
+		context.Status(http.StatusBadRequest).JSON(&fiber.Map{
+			"message":"could not get the book",
+		})
+		return err
+	}
+	context.Status(http.StatusOK).JSON(&fiber.Map{
+		"message":"book id  fetched successfully",
+		"data":bookModel,
+	})
+	return nil
+}
 
 // a struct method not a regular function
 func(r*Repository)SetupRoutes(app *fiber.App){
 	api:=app.Group("/api")
 	api.Post("/create_books",r.CreateBook)
-	api.Delete("delete_book/:id",r.DeleteBook)
+	api.Delete("/delete_book/:id",r.DeleteBook)
 	api.Get("/get_books/:id",r.GetBookByID)
 	api.Get("/books",r.GetBooks)
 
@@ -100,7 +125,11 @@ func main(){
 	}
 	db,err:=storage.NewConnection(config)
 	if err!=nil{
-		panic(err)
+		log.Fatal("could not load the database")
+	}
+	err=models.MigrateBooks(db)
+	if err!=nil{
+		log.Fatal("could not migrate db")
 	}
 
 
